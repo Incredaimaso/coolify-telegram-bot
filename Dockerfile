@@ -1,7 +1,6 @@
 # --- Stage 1: Build TDLib and the Go Bot ---
 FROM golang:1.25-bookworm AS builder
 
-# Install build dependencies for TDLib
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -13,11 +12,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /src
 
-# 1. Clone and Build TDLib v1.8.60
-# We use -j$(nproc) to use all available CPU cores for faster building
+# 1. Clone and Build TDLib
+# Changed: We fetch all tags and checkout the 1.8.0 branch which is the stable 1.8 base
 RUN git clone https://github.com/tdlib/td.git && \
     cd td && \
-    git checkout v1.8.60 && \
+    git checkout v1.8.0 && \
     mkdir build && \
     cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. && \
@@ -31,7 +30,6 @@ RUN go mod download
 
 COPY . .
 
-# Run any code generation if required by your bot
 RUN go generate ./...
 
 # Enable CGO so it can link to the TDLib we just built
@@ -42,7 +40,6 @@ FROM debian:bookworm-slim
 
 WORKDIR /app
 
-# Install runtime dependencies (SSL and C++ standard library)
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     zlib1g \
@@ -50,16 +47,11 @@ RUN apt-get update && apt-get install -y \
     libssl3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the compiled bot binary from builder
 COPY --from=builder /app/bot .
-
-# Copy the compiled TDLib shared objects from the builder's system path
 COPY --from=builder /usr/local/lib/libtdjson.so* /usr/local/lib/
 
-# Refresh the shared library cache so the OS finds libtdjson
 RUN ldconfig
 
-# Set environment variables
 ENV LD_LIBRARY_PATH=/usr/local/lib
 ENV TZ=UTC
 
