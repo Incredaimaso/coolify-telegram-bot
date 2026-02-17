@@ -27,17 +27,17 @@ Welcome to <b>%s</b> — your assistant to manage Coolify projects.
 					},
 				},
 				{
-					Text: "💫 Fᴀʟʟᴇɴ Pʀᴏᴊᴇᴄᴛꜱ",
+					Text: "💫 𝖯𝗂𝖱𝖠𝖲",
 					TypeField: &gotdbot.InlineKeyboardButtonTypeUrl{
-						Url: "https://t.me/FallenProjects",
+						Url: "https://piras_official.t.me",
 					},
 				},
 			},
 			{
 				{
-					Text: "🛠 Sᴏᴜʀᴄᴇ Cᴏᴅᴇ",
+					Text: "🛠 𝖲𝗎𝗉𝗉𝗈𝗋𝗍",
 					TypeField: &gotdbot.InlineKeyboardButtonTypeUrl{
-						Url: "https://github.com/AshokShau/coolify-telegram-bot",
+						Url: "https://slang_artists.t.me",
 					},
 				},
 			},
